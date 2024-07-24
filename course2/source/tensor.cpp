@@ -166,6 +166,13 @@ void Tensor<float>::Padding(const std::vector<uint32_t>& pads,
   uint32_t pad_cols2 = pads.at(3);  // right
 
   // 请补充代码
+  uint32_t new_rows = this->rows() + pad_rows1 + pad_rows2;
+  uint32_t new_cols = this->cols() + pad_cols1 + pad_cols2;
+  arma::fcube new_data(new_rows, new_cols, this->channels());
+  new_data.fill(padding_value);
+  new_data.subcube(pad_rows1, pad_cols1, 0, pad_rows1 + this->rows() - 1,
+                   pad_cols1 + this->cols() - 1, this->channels() - 1) = this->data_;
+  this->data_ = new_data;
 }
 
 void Tensor<float>::Fill(float value) {
@@ -204,6 +211,7 @@ void Tensor<float>::Show() {
 void Tensor<float>::Flatten(bool row_major) {
   CHECK(!this->data_.empty());
   // 请补充代码
+  this->Reshape({this->size()}, row_major);
 }
 
 void Tensor<float>::Rand() {
