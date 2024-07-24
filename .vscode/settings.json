@@ -1,3 +1,4 @@
 {
-    "testMate.cpp.test.executables": "{build,Build,BUILD,out,Out,OUT}/course*/*{test,Test,TEST,kuiper_datawhale_course}*"
+    "testMate.cpp.test.executables": "{build,Build,BUILD,out,Out,OUT}/course*/*{test,Test,TEST,kuiper_datawhale_course}*",
+    "testMate.cpp.test.workingDirectory": "/home/kuiperdatawhale"
 }
