@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(kuiper_datawhale)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 add_subdirectory(course1)
 add_subdirectory(course2)
 add_subdirectory(course3)

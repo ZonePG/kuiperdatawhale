@@ -1,0 +1,3 @@
+{
+    "testMate.cpp.test.executables": "{build,Build,BUILD,out,Out,OUT}/course*/*{test,Test,TEST,kuiper_datawhale_course}*"
+}
