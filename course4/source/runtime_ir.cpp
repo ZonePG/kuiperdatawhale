@@ -3,6 +3,7 @@
 #include <deque>
 #include <iostream>
 #include <memory>
+#include <queue>
 #include <utility>
 #include <vector>
 
@@ -261,19 +262,38 @@ void RuntimeGraph::Build(const std::string &input_name,
 void RuntimeGraph::ReverseTopo(
     const std::shared_ptr<RuntimeOperator> &root_op) {
   CHECK(root_op != nullptr) << "current operator is nullptr";
+  // method 1 recursive
+  // root_op->has_forward = true;
+  // const auto &next_ops = root_op->output_operators;
+  // for (const auto &[_, op] : next_ops) {
+  //   if (op != nullptr) {
+  //     if (!op->has_forward) {
+  //       this->ReverseTopo(op);
+  //     }
+  //   }
+  // }
+  // for (const auto &[_, op] : next_ops) {
+  //   CHECK_EQ(op->has_forward, true);
+  // }
+  // this->topo_operators_.push_back(root_op);
+
+  // method 2 queue
+  std::queue<std::shared_ptr<RuntimeOperator>> queue_ops;
   root_op->has_forward = true;
-  const auto &next_ops = root_op->output_operators;
-  for (const auto &[_, op] : next_ops) {
-    if (op != nullptr) {
-      if (!op->has_forward) {
-        this->ReverseTopo(op);
+  queue_ops.push(root_op);
+  while (!queue_ops.empty()) {
+    auto current_op = queue_ops.front();
+    queue_ops.pop();
+    this->topo_operators_.push_back(current_op);
+    const auto &next_ops = current_op->output_operators;
+    for (const auto &[_, op] : next_ops) {
+      if (op != nullptr && !op->has_forward) {
+        op->has_forward = true;
+        queue_ops.push(op);
       }
     }
   }
-  for (const auto &[_, op] : next_ops) {
-    CHECK_EQ(op->has_forward, true);
-  }
-  this->topo_operators_.push_back(root_op);
+  std::reverse(topo_operators_.begin(), topo_operators_.end());
 }
 
 void RuntimeGraph::InitGraphAttrs(
