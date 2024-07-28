@@ -74,10 +74,9 @@ InferStatus SigmoidLayer::Forward(
     CHECK(output->shapes() == input->shapes())
             << "The input and output tensor shapes of the sigmoid layer do not match "
             << i << " th";
-    for (uint32_t j = 0; j < input->size(); ++j) {
-      float value = input->index(j);
-      output->index(j) = 1 / (1.f + expf(-value));
-    }
+    uint32_t size = output->size();
+    arma::fcube &input_data = input->data();
+    output->set_data(1 / (1 + arma::exp(-input_data)));
   }
   return InferStatus::kInferSuccess;
 }

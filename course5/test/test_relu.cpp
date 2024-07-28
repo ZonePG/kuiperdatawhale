@@ -38,7 +38,7 @@ TEST(test_registry, registry2) {
   ASSERT_EQ(registry1, registry2);
   LayerRegisterer::RegisterCreator("test_type", MyTestCreator);
   LayerRegisterer::CreateRegistry registry3 = LayerRegisterer::Registry();
-  ASSERT_EQ(registry3.size(), 2);
+  ASSERT_EQ(registry3.size(), 3);
   ASSERT_NE(registry3.find("test_type"), registry3.end());
 }
 
