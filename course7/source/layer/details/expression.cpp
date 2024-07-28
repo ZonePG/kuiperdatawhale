@@ -89,6 +89,25 @@ InferStatus ExpressionLayer::Forward(
         input_token_nodes.push_back(inputs.at(i + start_pos));
       }
       op_stack.push(input_token_nodes);
+    } else if (token_node->num_index == -2) {
+      // process operation
+      const int32_t op = token_node->left->num_index;
+      CHECK(!op_stack.empty()) << "The number of operand is less than one";
+      std::vector<std::shared_ptr<Tensor<float>>> input_node1 = op_stack.top();
+
+      CHECK(input_node1.size() == batch_size)
+          << "The first operand doesn't have appropriate number of tensors, "
+             "which need "
+          << batch_size;
+      op_stack.pop();
+
+      std::vector<std::shared_ptr<Tensor<float>>> output_token_nodes(
+          batch_size);
+      for (uint32_t i = 0; i < batch_size; ++i) {
+        // do execution
+        output_token_nodes.at(i) = TensorElementSin(input_node1.at(i));
+      }
+      op_stack.push(output_token_nodes);
     } else {
       // process operation
       const int32_t op = token_node->num_index;
